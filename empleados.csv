@@ -1,19 +1,17 @@
 ID_Empleado, Nombre, Cargo, Departamento, Fecha_Ingreso, Salario
-1, Juan Pérez, Analista, TI, 2019-06-01, 2500
-2, Ana Gómez, Directora, RRHH, 2018-02-15, 4000
-3, Carlos Martínez, Técnico, TI, 2020-03-12, 2200
-4, Laura Sánchez, Secretaria, Administración, 2021-11-30, 1800
-5, Pedro Rodríguez, Gerente, Marketing, 2017-08-20, 5000
-6, María López, Desarrolladora, TI, 2022-05-22, 2700
-7, Javier Torres, Coordinador, RRHH, 2016-09-11, 3200
-8, Beatriz Ramos, Contadora, Administración, 2020-01-15, 2300
-9, Guillermo Ruiz, Técnico, TI, 2023-02-04, 2100
-10, Cristina Fernández, Ejecutiva, Marketing, 2019-11-25, 2900
-11, Sergio Díaz, Analista, TI, 2021-04-14, 2400
-12, Rosa Castillo, Asistente, RRHH, 2018-06-07, 1900
-13, Mario Gómez, Director, Marketing, 2015-03-21, 5500
-14, Paula Martínez, Secretaria, Administración, 2022-12-05, 2100
-15, Fernando Pérez, Coordinador, Marketing, 2016-07-01, 3300
-16, Javier García, Director Técnico, TI, 2018-04-10, 4500
-17, Marta López, Recepcionista, Administración, 2023-01-30, 1900
-18,antonio gomez,Secretaria,RRHH,2024-11-15,2000
+1, Ana Gómez, Directora, RRHH, 2018-02-15, 4000
+2, Carlos Martínez, Técnico, TI, 2020-03-12, 2200
+3, Laura Sánchez, Secretaria, Administración, 2021-11-30, 1800
+4, María López, Desarrolladora, TI, 2022-05-22, 2700
+5, Javier Torres, Coordinador, RRHH, 2016-09-11, 3200
+6, Beatriz Ramos, Contadora, Administración, 2020-01-15, 2300
+7, Guillermo Ruiz, Técnico, TI, 2023-02-04, 2100
+8, Cristina Fernández, Ejecutiva, Marketing, 2019-11-25, 2900
+9, Sergio Díaz, Analista, TI, 2021-04-14, 2400
+10, Mario Gómez, Director, Marketing, 2015-03-21, 5500
+11, Paula Martínez, Secretaria, Administración, 2022-12-05, 2100
+12, Alberto Sánchez, Asesor, RRHH, 2017-02-01, 2800
+13, Inés López, Ingeniera, TI, 2022-10-17, 3000
+14, Fernando Pérez, Coordinador, Marketing, 2016-07-01, 3300
+15, Javier García, Director Técnico, TI, 2018-04-10, 4500
+16, Marta López, Recepcionista, Administración, 2023-01-30, 1900

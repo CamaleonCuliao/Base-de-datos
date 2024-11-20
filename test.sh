@@ -3,7 +3,60 @@
 # Nombre de la carpeta principal
 CARPETA_PRINCIPAL="Empleados"
 ARCHIVO_CSV="empleados.csv"
+ARCHIVO_TXT="empleados.txt"
 REPOSITORIO_GIT="https://github.com/CamaleonCuliao/Base-de-datos.git"
+
+# Función para convertir empleados.txt a empleados.csv si es necesario
+convertir_txt_a_csv() {
+    if [ ! -f "$ARCHIVO_CSV" ]; then
+        if [ -f "$ARCHIVO_TXT" ]; then
+            echo "Convirtiendo $ARCHIVO_TXT a $ARCHIVO_CSV..."
+            # Convertir el archivo .txt a .csv
+            cp "$ARCHIVO_TXT" "$ARCHIVO_CSV"
+            echo "Conversión completada."
+        else
+            echo "No se encontró $ARCHIVO_TXT. Asegúrese de que el archivo exista."
+            exit 1
+        fi
+    else
+        echo "El archivo $ARCHIVO_CSV ya existe. No es necesario convertir."
+    fi
+}
+
+# Llamar a la función de conversión al inicio del script
+convertir_txt_a_csv
+
+# Función para crear carpetas por cada empleado dentro de la carpeta "Empleados"
+crear_carpetas_empleados() {
+    if [ ! -d "$CARPETA_PRINCIPAL" ]; then
+        mkdir "$CARPETA_PRINCIPAL"
+        echo "Carpeta principal '$CARPETA_PRINCIPAL' creada."
+    else
+        echo "La carpeta principal '$CARPETA_PRINCIPAL' ya existe."
+    fi
+
+    while IFS=, read -r ID_Empleado Nombre Cargo Departamento Fecha_Ingreso Salario; do
+        if [ "$ID_Empleado" != "ID_Empleado" ]; then
+            NOMBRE_CARPETA=$(echo "$Nombre" | tr ' ' '_')
+            RUTA_CARPETA="$CARPETA_PRINCIPAL/$NOMBRE_CARPETA"
+            if [ ! -d "$RUTA_CARPETA" ]; then
+                mkdir "$RUTA_CARPETA"
+                echo "Carpeta '$RUTA_CARPETA' creada."
+            else
+                echo "La carpeta '$RUTA_CARPETA' ya existe."
+            fi
+        fi
+    done < "$ARCHIVO_CSV"
+}
+
+# Función para reorganizar IDs en el archivo CSV
+reorganizar_ids() {
+    if [ -f "$ARCHIVO_CSV" ]; then
+        echo "Reorganizando IDs..."
+        awk -F, 'NR == 1 {print $0} NR > 1 {print NR-1","$2","$3","$4","$5","$6}' "$ARCHIVO_CSV" > "$ARCHIVO_CSV.tmp" && mv "$ARCHIVO_CSV.tmp" "$ARCHIVO_CSV"
+        echo "IDs reorganizados."
+    fi
+}
 
 # Función para crear carpetas por cada empleado dentro de la carpeta "Empleados"
 crear_carpetas_empleados() {
@@ -90,6 +143,9 @@ anadir_empleado() {
         mkdir "$RUTA_CARPETA"
         echo "Carpeta de $nombre creada en $RUTA_CARPETA"
     fi
+
+    # Reorganizar IDs
+    reorganizar_ids
 }
 
 # Función para eliminar un empleado
@@ -98,20 +154,27 @@ eliminar_empleado() {
     awk -F, 'NR > 1 {print $1, $2, $3, $4}' "$ARCHIVO_CSV"
     read -p "Ingrese el ID del empleado a eliminar: " id_empleado
 
-    if grep -q "^$id_empleado," "$ARCHIVO_CSV"; then
+    # Capturar la línea del empleado a eliminar antes de modificar el archivo CSV
+    empleado_a_eliminar=$(grep "^$id_empleado," "$ARCHIVO_CSV")
+    
+    if [ -n "$empleado_a_eliminar" ]; then
+        # Extraer nombre del empleado para eliminar la carpeta
+        nombre_empleado=$(echo "$empleado_a_eliminar" | awk -F, '{print $2}')
+        
+        # Eliminar del CSV
         sed -i "/^$id_empleado,/d" "$ARCHIVO_CSV"
         echo "Empleado con ID $id_empleado eliminado."
 
-        nombre_empleado=$(awk -F, -v id="$id_empleado" '$1 == id {print $2}' "$ARCHIVO_CSV")
+        # Eliminar carpeta asociada
         if [ -d "$CARPETA_PRINCIPAL/$nombre_empleado" ]; then
             rm -r "$CARPETA_PRINCIPAL/$nombre_empleado"
             echo "Carpeta de $nombre_empleado eliminada."
         fi
 
-        awk -F, 'NR > 1 {print $1, $2, $3, $4, $5, $6}' OFS=, "$ARCHIVO_CSV" | sort -t, -k1,1n > "$ARCHIVO_CSV.tmp" && mv "$ARCHIVO_CSV.tmp" "$ARCHIVO_CSV"
-        echo "Los IDs se han reorganizado."
+        # Reorganizar IDs
+        reorganizar_ids
     else
-        echo "Empleado no encontrado."
+        echo "Empleado con ID $id_empleado no encontrado."
     fi
 }
 
