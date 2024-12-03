@@ -12,6 +12,5 @@ ID_Empleado, Nombre, Cargo, Departamento, Fecha_Ingreso, Salario
 11, Paula Martínez, Secretaria, Administración, 2022-12-05, 2100
 12, Alberto Sánchez, Asesor, RRHH, 2017-02-01, 2800
 13, Inés López, Ingeniera, TI, 2022-10-17, 3000
-14, Fernando Pérez, Coordinador, Marketing, 2016-07-01, 3300
-15, Javier García, Director Técnico, TI, 2018-04-10, 4500
-16, Marta López, Recepcionista, Administración, 2023-01-30, 1900
+14, Javier García, Director Técnico, TI, 2018-04-10, 4500
+15, Marta López, Recepcionista, Administración, 2023-01-30, 1900
