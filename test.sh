@@ -184,6 +184,48 @@ subir_a_repositorio() {
     echo "Cambios subidos al repositorio con éxito."
 }
 
+# Función para mostrar estadísticas de salario
+estadisticas_salario() {
+    max_salario=$(awk -F, 'NR > 1 {print $6}' "$ARCHIVO_CSV" | sort -n | tail -n 1)
+    min_salario=$(awk -F, 'NR > 1 {print $6}' "$ARCHIVO_CSV" | sort -n | head -n 1)
+
+    empleado_max_salario=$(awk -F, -v max="$max_salario" '$6 == max {print $2, $6}' "$ARCHIVO_CSV")
+    empleado_min_salario=$(awk -F, -v min="$min_salario" '$6 == min {print $2, $6}' "$ARCHIVO_CSV")
+
+    echo "Empleado con mayor salario: $empleado_max_salario"
+    echo "Empleado con menor salario: $empleado_min_salario"
+}
+
+# Función para mostrar estadísticas de fecha de ingreso
+estadisticas_fecha_ingreso() {
+    fecha_mais_reciente=$(awk -F, 'NR > 1 {print $5}' "$ARCHIVO_CSV" | sort | tail -n 1)
+    fecha_mas_antigua=$(awk -F, 'NR > 1 {print $5}' "$ARCHIVO_CSV" | sort | head -n 1)
+
+    empleado_mas_reciente=$(awk -F, -v fecha="$fecha_mais_reciente" '$5 == fecha {print $2, $5}' "$ARCHIVO_CSV")
+    empleado_mas_antiguo=$(awk -F, -v fecha="$fecha_mas_antigua" '$5 == fecha {print $2, $5}' "$ARCHIVO_CSV")
+
+    echo "Empleado más reciente: $empleado_mas_reciente"
+    echo "Empleado más antiguo: $empleado_mas_antiguo"
+}
+
+# Función para mostrar estadísticas de departamento
+estadisticas_departamento() {
+    dep_mas_empleados=$(awk -F, '{print $4}' "$ARCHIVO_CSV" | sort | uniq -c | sort -nr | head -n 1)
+    dep_menos_empleados=$(awk -F, '{print $4}' "$ARCHIVO_CSV" | sort | uniq -c | sort -n | head -n 1)
+
+    echo "Departamento con más empleados: $dep_mas_empleados"
+    echo "Departamento con menos empleados: $dep_menos_empleados"
+}
+
+# Función para mostrar estadísticas de cargo
+estadisticas_cargo() {
+    cargo_mas_empleados=$(awk -F, '{print $3}' "$ARCHIVO_CSV" | sort | uniq -c | sort -nr | head -n 1)
+    cargo_menos_empleados=$(awk -F, '{print $3}' "$ARCHIVO_CSV" | sort | uniq -c | sort -n | head -n 1)
+
+    echo "Cargo con más empleados: $cargo_mas_empleados"
+    echo "Cargo con menos empleados: $cargo_menos_empleados"
+}
+
 # Función principal del menú
 menu() {
     while true; do
@@ -212,18 +254,10 @@ menu() {
                     read -p "Seleccione una opción: " sub_opcion
 
                     case $sub_opcion in
-                        1) 
-                            echo "Estadísticas de Salario - No se realiza ninguna acción por el momento."
-                            ;;
-                        2)
-                            echo "Estadísticas de Fecha de Ingreso - No se realiza ninguna acción por el momento."
-                            ;;
-                        3)
-                            echo "Estadísticas de Departamento - No se realiza ninguna acción por el momento."
-                            ;;
-                        4)
-                            echo "Estadísticas de Cargo - No se realiza ninguna acción por el momento."
-                            ;;
+                        1) estadisticas_salario ;;
+                        2) estadisticas_fecha_ingreso ;;
+                        3) estadisticas_departamento ;;
+                        4) estadisticas_cargo ;;
                         5) 
                             break  # Volver al menú principal
                             ;;
@@ -242,5 +276,4 @@ menu() {
 
 # Ejecutar el menú
 menu
-
 
