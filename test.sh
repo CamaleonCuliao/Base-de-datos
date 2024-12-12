@@ -58,29 +58,6 @@ reorganizar_ids() {
     fi
 }
 
-# Función para crear carpetas por cada empleado dentro de la carpeta "Empleados"
-crear_carpetas_empleados() {
-    if [ ! -d "$CARPETA_PRINCIPAL" ]; then
-        mkdir "$CARPETA_PRINCIPAL"
-        echo "Carpeta principal '$CARPETA_PRINCIPAL' creada."
-    else
-        echo "La carpeta principal '$CARPETA_PRINCIPAL' ya existe."
-    fi
-
-    while IFS=, read -r ID_Empleado Nombre Cargo Departamento Fecha_Ingreso Salario; do
-        if [ "$ID_Empleado" != "ID_Empleado" ]; then
-            NOMBRE_CARPETA=$(echo "$Nombre" | tr ' ' '_')
-            RUTA_CARPETA="$CARPETA_PRINCIPAL/$NOMBRE_CARPETA"
-            if [ ! -d "$RUTA_CARPETA" ]; then
-                mkdir "$RUTA_CARPETA"
-                echo "Carpeta '$RUTA_CARPETA' creada."
-            else
-                echo "La carpeta '$RUTA_CARPETA' ya existe."
-            fi
-        fi
-    done < "$ARCHIVO_CSV"
-}
-
 # Función para agregar un nuevo empleado
 anadir_empleado() {
     read -p "Ingrese el nombre del empleado: " nombre
@@ -178,61 +155,6 @@ eliminar_empleado() {
     fi
 }
 
-# Función para mostrar las estadísticas
-mostrar_estadisticas() {
-    echo "Seleccione el tipo de estadísticas que desea ver:"
-    echo "1. Estadísticas de cargos"
-    echo "2. Estadísticas de departamentos"
-    echo "3. Estadísticas de salarios"
-    read -p "Seleccione una opción: " opcion
-
-    case $opcion in
-        1) estadisticas_cargos ;;
-        2) estadisticas_departamentos ;;
-        3) estadisticas_salarios ;;
-        *) echo "Opción no válida";;
-    esac
-}
-
-estadisticas_cargos() {
-    declare -A cargos
-    while IFS=, read -r ID_Empleado Nombre Cargo Departamento Fecha_Ingreso Salario; do
-        if [ "$ID_Empleado" != "ID_Empleado" ]; then
-            ((cargos["$Cargo"]++))
-        fi
-    done < "$ARCHIVO_CSV"
-    max_cargo=$(for c in "${!cargos[@]}"; do echo "${c},${cargos[$c]}"; done | sort -t, -k2 -n | tail -n 1)
-    min_cargo=$(for c in "${!cargos[@]}"; do echo "${c},${cargos[$c]}"; done | sort -t, -k2 -n | head -n 1)
-    echo "Cargo con más empleados: $max_cargo"
-    echo "Cargo con menos empleados: $min_cargo"
-}
-
-estadisticas_departamentos() {
-    declare -A departamentos
-    while IFS=, read -r ID_Empleado Nombre Cargo Departamento Fecha_Ingreso Salario; do
-        if [ "$ID_Empleado" != "ID_Empleado" ]; then
-            ((departamentos["$Departamento"]++))
-        fi
-    done < "$ARCHIVO_CSV"
-    max_departamento=$(for d in "${!departamentos[@]}"; do echo "${d},${departamentos[$d]}"; done | sort -t, -k2 -n | tail -n 1)
-    min_departamento=$(for d in "${!departamentos[@]}"; do echo "${d},${departamentos[$d]}"; done | sort -t, -k2 -n | head -n 1)
-    echo "Departamento con más empleados: $max_departamento"
-    echo "Departamento con menos empleados: $min_departamento"
-}
-
-estadisticas_salarios() {
-    salarios=()
-    while IFS=, read -r ID_Empleado Nombre Cargo Departamento Fecha_Ingreso Salario; do
-        if [ "$ID_Empleado" != "ID_Empleado" ]; then
-            salarios+=($Salario)
-        fi
-    done < "$ARCHIVO_CSV"
-    max_salario=$(printf "%s\n" "${salarios[@]}" | sort -n | tail -n 1)
-    min_salario=$(printf "%s\n" "${salarios[@]}" | sort -n | head -n 1)
-    echo "El salario más alto es: $max_salario"
-    echo "El salario más bajo es: $min_salario"
-}
-
 # Función para subir los cambios al repositorio de GitHub
 subir_a_repositorio() {
     echo "Subiendo los cambios al repositorio de GitHub..."
@@ -278,7 +200,39 @@ menu() {
             1) crear_carpetas_empleados ;;
             2) anadir_empleado ;;
             3) eliminar_empleado ;;
-            4) mostrar_estadisticas ;;
+            4) 
+                # Submenú de estadísticas
+                while true; do
+                    echo "Estadísticas"
+                    echo "1. Estadísticas de Salario"
+                    echo "2. Estadísticas de Fecha de Ingreso"
+                    echo "3. Estadísticas de Departamento"
+                    echo "4. Estadísticas de Cargo"
+                    echo "5. Volver al menú principal"
+                    read -p "Seleccione una opción: " sub_opcion
+
+                    case $sub_opcion in
+                        1) 
+                            echo "Estadísticas de Salario - No se realiza ninguna acción por el momento."
+                            ;;
+                        2)
+                            echo "Estadísticas de Fecha de Ingreso - No se realiza ninguna acción por el momento."
+                            ;;
+                        3)
+                            echo "Estadísticas de Departamento - No se realiza ninguna acción por el momento."
+                            ;;
+                        4)
+                            echo "Estadísticas de Cargo - No se realiza ninguna acción por el momento."
+                            ;;
+                        5) 
+                            break  # Volver al menú principal
+                            ;;
+                        *)
+                            echo "Opción no válida. Intente nuevamente."
+                            ;;
+                    esac
+                done
+                ;;
             5) subir_a_repositorio ;;
             6) echo "Saliendo..."; break ;;
             *) echo "Opción no válida";;
@@ -288,4 +242,5 @@ menu() {
 
 # Ejecutar el menú
 menu
+
 
